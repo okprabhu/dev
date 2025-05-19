@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Doubly beam Analyser</title>
+  <style type="text/css">
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      -webkit-appearance: none;
+      outline-style: none;
+      box-shadow: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    }
+
+    body,
+    div,
+    form,
+    html,
+    label,
+    span,
+    strong,
+    sub,
+    sup {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    a[href],
+    input[type='submit'],
+    input[type='image'],
+    label[for],
+    select,
+    button,
+    .pointer {
+      cursor: pointer;
+    }
+
+    body,
+    html {
+      width: 100%;
+      vertical-align: baseline;
+    }
+
+    body {
+      background-color: #fefcdb9e;
+      line-height: 1.6;
+      -webkit-overflow-scrolling: touch;
+      overflow-y: auto;
+      text-rendering: optimizeLegibility;
+      background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+    }
+
+    html {
+      font-size: 62.5%;
+      line-height: 1.15;
+      -ms-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+      word-break: break-word;
+    }
+
+
+    div,
+    form,
+    label,
+    span,
+    strike,
+    strong {
+      vertical-align: baseline
+    }
+
+    input:focus::placeholder {
+      opacity: .2
+    }
+
+    input::placeholder {
+      opacity: 1;
+      transition: opacity .2s;
+      color: inherit
+    }
+
+    input[type=radio] {
+      font-size: 1.5rem;
+      border: .125em solid #000;
+      background: #FFF;
+      cursor: pointer;
+      height: 1.2em;
+      width: 1.2em;
+      box-shadow: inset 0 0 0 .155em #FFF;
+      vertical-align: text-top;
+      margin: 0 .3em;
+      padding: 0;
+      transition: background-color .3s, box-shadow .3s;
+    }
+
+    input[type=radio]:checked {
+      background: #f05a28
+    }
+
+    label:hover>input[type=radio]:checked {
+      box-shadow: inset 0 0 0 .1875em #fff
+    }
+
+    label:hover>input[type=radio]:not(:checked) {
+      background: #f7931e;
+    }
+
+    input[type=radio] {
+      border-radius: 100%
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 20px;
+      box-sizing: border-box
+    }
+
+    hr {
+      margin-top: 1.1rem;
+      margin-bottom: 1.5rem;
+      border-width: 0;
+      border-top: 1px solid #e1e1e1
+    }
+
+    .btn,
+    label {
+      display: inline-block
+    }
+
+    label {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #3b4351;
+      margin: .8rem .2rem .2rem
+    }
+
+    .description {
+      font-size: 1.4rem;
+      color: #66758c;
+      margin: .8rem .2rem .2rem
+    }
+
+    .btn,
+    input[type=number],
+    select {
+      height: 38px;
+      border-radius: 4px;
+      box-sizing: border-box
+    }
+
+    input[type=number],
+    select {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1px solid #999
+    }
+
+    .btn {
+      -webkit-tap-highlight-color: transparent;
+      padding: 0 3vw;
+      color: #66758c;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 38px;
+      letter-spacing: .1rem;
+      text-transform: uppercase;
+      text-decoration: none;
+      white-space: nowrap;
+      background-color: transparent;
+      border: 1px solid #bbb;
+      cursor: pointer;
+      transition: all .1s ease-out
+    }
+
+    .btn:active,
+    .btn:hover {
+      opacity: .85;
+      cursor: pointer;
+      transform: scale(1.03)
+    }
+
+    .btn:focus {
+      outline: 0
+    }
+
+    .btn:active {
+      opacity: 1;
+      transform: scale(1)
+    }
+
+    input[type=number]:focus,
+    select:focus {
+      border: 1px solid #f94c07;
+      box-shadow: 0 0 0 0.1rem #f94c0733;
+
+    }
+
+    sub {
+      font-size: small;
+      vertical-align: sub
+    }
+
+    sup {
+      font-size: small;
+      vertical-align: super
+    }
+
+    .hid {
+      color: #ebedee;
+    }
+
+    .PG {
+      --gn: auto;
+      --gg: 0 2vh;
+      --gc: 1;
+      --gr: 1;
+      --go: 0;
+      display: grid;
+      gap: var(--gg, 0)
+    }
+
+    @media (min-width:640px) {
+      .PG {
+        grid-template-columns: repeat(var(--gn, 1), 1fr)
+      }
+
+      .PG>* {
+        grid-column: auto/span var(--gc, auto);
+        grid-row: auto/span var(--gr, auto);
+        order: var(--go, 0);
+        min-width: 0
+      }
+    }
+
+    .added {
+
+      -webkit-animation: apear 1s;
+      -webkit-animation-fill-mode: forwards;
+      animation: apear 1s;
+      animation-fill-mode: forwards;
+    }
+
+    @-webkit-keyframes apear {
+      0% {
+
+        -webkit-transform: translateX(-200%);
+        transform: translateX(-200%);
+      }
+
+
+      50% {
+
+        -webkit-transform: translateX(10%);
+        transform: translateX(10%);
+      }
+
+      100% {
+        -webkit-transform: translateX(0%);
+        transform: translateX(0%);
+      }
+    }
+
+    @keyframes apear {
+      0% {
+
+        -webkit-transform: translateX(-200%);
+        transform: translateX(-200%);
+      }
+
+      50% {
+
+        -webkit-transform: translateX(10%);
+        transform: translateX(10%);
+      }
+
+      100% {
+        -webkit-transform: translateX(0%);
+        transform: translateX(0%);
+      }
+    }
+
+    .removed {
+
+      -webkit-animation: disapear 1s;
+      -webkit-animation-fill-mode: forwards;
+      animation: disapear 1s;
+      animation-fill-mode: forwards;
+    }
+
+    @-webkit-keyframes disapear {
+
+      50% {
+
+        -webkit-transform: translateX(-5%);
+        transform: translateX(-5%);
+      }
+
+      100% {
+        -webkit-transform: translateX(200%);
+        transform: translateX(200%);
+      }
+    }
+
+    @keyframes disapear {
+
+      50% {
+
+        -webkit-transform: translateX(-5%);
+        transform: translateX(-5%);
+      }
+
+      100% {
+        -webkit-transform: translateX(200%);
+        transform: translateX(200%);
+      }
+    }
+  </style>
+
+
+
+  <script type="application/x-template">
+@-webkit-keyframes disapear{
+  
+  0% {
+    height: {{height}};
+  }
+  
+  30% {
+    
+    -webkit-transform: translateX(-5%);
+    transform: translateX(-5%);
+  }
+  
+  60% {
+    -webkit-transform: translateX(200%);
+    transform: translateX(200%);
+
+    height: {{height*0.4}};
+    margin-bottom: 2.5vh;
+  }
+  
+  100% {
+
+    -webkit-transform: translateX(200%);
+    transform: translateX(200%);
+    height: 0;
+    margin-bottom: 2vh;
+  }
+} 
+
+
+  @keyframes disapear{
+  
+  0% {
+    height: {{height}};
+  }
+  
+  30% {
+    
+    -webkit-transform: translateX(-5%);
+    transform: translateX(-5%);
+  }
+  
+  60% {
+    -webkit-transform: translateX(200%);
+    transform: translateX(200%);
+
+    height: {{height*0.4}};
+    margin-bottom: 2.5vh;
+  }
+  
+  100% {
+    
+    -webkit-transform: translateX(200%);
+    transform: translateX(200%);
+    
+
+    height: 0;
+    margin-bottom: 2vh;
+  }
+}
+
+
+@-webkit-keyframes apear{
+  
+  0% {
+    height: 0;
+  }
+  
+  30% {
+    
+    -webkit-transform: translateX(-200%);
+    transform: translateX(-200%);
+  }
+  
+  60% {
+    -webkit-transform: translateX(10%);
+    transform: translateX(10%);
+
+    height: {{height*0.6}};
+    margin-bottom: 2.5vh;
+  }
+  
+  100% {
+    
+
+    -webkit-transform: translateX(0%);
+    transform: translateX(0%);
+    height: {{height}};
+    margin-bottom: 2vh;
+  }
+} 
+
+
+  @keyframes apear{
+  
+  0% {
+    height: 0;
+  }
+  
+  30% {
+    
+    -webkit-transform: translateX(-200%);
+    transform: translateX(-200%);
+  }
+  
+  60% {
+    -webkit-transform: translateX(10%);
+    transform: translateX(10%);
+
+    height: {{height*0.6}};
+    margin-bottom: 2.5vh;
+  }
+  
+  100% {
+    
+    -webkit-transform: translateX(0%);
+    transform: translateX(0%);
+    
+
+    height: {{height}};
+    margin-bottom: 2vh;
+  }
+}
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <form id="myForm" onsubmit="finalanalysis();return false;">
+      <h1
+        style="font-size: 1.5rem;color:#3b4351;text-transform: uppercase;letter-spacing: 0.2rem;margin: .8rem .2rem .2rem">
+        Beam analyser</h1>
+      <hr>
+      <div class="PG" style="--gn: 3;">
+        <div><label>Grade of materials</label>
+          <p class="description">Choose <b>grade</b> of concrete and Steel.</p>
+        </div>
+        <div><label for="fck">Concrete(N/mm<sup>2</sup>):</label>
+          <select name="fck" id="fck" onchange="re()" size="1">
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+            <option value="30">30</option>
+            <option value="35">35</option>
+          </select>
+        </div>
+        <div><label for="fy">Steel(N/mm<sup>2</sup>):</label>
+          <select name="fy" id="fy" onchange="re();" size="1">
+            <option value="250">250</option>
+            <option value="415">415</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+      </div>
+      <hr>
+      <div class="PG" style="--gn: 3;">
+        <div style="--gr: 2;"><label>Physical Dimensions Of beam</label>
+          <p class="description">If you don't have total depth, then enter effective depth and put cover <b>'0'</b>.</p>
+          <p class="description">For doubly analysis cover at comp. side is mandatory. </p>
+        </div>
+        <div><label for="B">Width(mm):</label>
+          <input type="number" oninput="re();" id="B" value="200" min="0" aria-label="Width of beam" required />
+        </div>
+        <div><label for="D">Total Depth(mm):</label>
+          <input type="number" oninput="re();" id="D" value="500" min="0" aria-label="Total depth of beam" required />
+        </div>
+        <div><label for="ct">Effective Cover at Tension Side(mm):</label>
+          <input type="number" oninput="re();" step="0.01" id="ct" value="50" min="0"
+            aria-label="Effective cover at tension side" required />
+        </div>
+        <div><label for="cc">Effective Cover at Comp. Side(mm):</label>
+          <input type="number" oninput="re();" step="0.01" id="cc" value="30" min="0"
+            aria-label="Effective cover at compression side" required />
+        </div>
+      </div>
+      <hr>
+      <div class="PG" style="--gn: 3;">
+        <div><label>Area of steel at tension side</label></div>
+        <div style="--gc: 2;">
+          <div style="display: grid;grid-template-columns: 37% 63%;">
+            <div><label for="ast1"><input type="radio" id="ast1" name="AST" value="ast" onclick="ocast1()" />AST</label>
+            </div>
+            <div><label for="ast2"><input type="radio" id="ast2" name="AST" value="barst" onclick="ocast2()" />Bar
+                Combinations</label></div>
+          </div>
+        </div>
+        <div>
+          <p class="description">Click on <b>Bar Combination</b>, If you have diameter and no. of bars.</p>
+        </div>
+        <div id="mastd" style="--gc: 2; margin-bottom: 1.1rem;">
+          <div id="astd" style="--gc: 2; margin-bottom: 1.1rem;">
+            <label for="inast">Area of steel at Tension Side(mm<sup>2</sup>):</label></br><input type="number"
+              step="any" min="0.00" id="inast" value="942.5" oninput="ocast1()"
+              aria-label="Area of steel at tension side" required />
+          </div>
+        </div>
+        <div id="mastbc" style="--gc: 2;margin-bottom: 1.1rem;">
+          <div id="astbc" style="--gc: 2;margin-bottom: 1.1rem;">
+            <div style="display: grid;grid-template-columns: 39% 26% 29%;" id="addtbar1">
+              <div style=" margin-right: 2vh;"><label for="diaast1">&#934;(mm):<sup class="hid">0</sup></label>
+                <input type="number" step="1" id="diaast1" value="20" min="0" oninput="calcast()" required />
+              </div>
+              <div style=" margin-right: 2vh;"><label for="nast1">No:<sup class="hid">0</sup></label>
+                <input type="number" step="1" id="nast1" value="3" min="0" oninput="calcast()" required />
+              </div>
+              <div><button class="btn" style="border: 1px solid #f7931e;margin-top: 3.55rem;" type="button"
+                  name="myButton" onclick="addt()">Add Ast</button>
+                <input type="number" step="1" id="sast1" class="sast" style="display:none" min="0.00" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div><label for="outast">Total Ast(mm<sup>2</sup>)</label></div>
+        <div style="--gc: 2;"><input type="number" step="any" min="0.00" id="outast" placeholder=" " readonly /></div>
+      </div>
+      <hr>
+      <div class="PG" style="--gn: 3;">
+        <div style="--gr: 2;"><label>Area of steel at Compression side</label>
+          <p class="description">If you want to analyse singly reinforced beam, then enter no. of bars as<b>'0'</b>.</p>
+        </div>
+        <div style="--gc: 2;">
+          <div style="display: grid;grid-template-columns: 37% 63%;">
+            <div><label for="asc1"><input type="radio" id="asc1" name="ASC" value="asc" onclick="ocasc1()" />ASC</label>
+            </div>
+            <div><label for="asc2"><input type="radio" id="asc2" name="ASC" value="barsc" onclick="ocasc2()" />Bar
+                Combinations</label></div>
+          </div>
+        </div>
+        <div id="ascd" style="--gc: 2;margin-bottom: 1.1rem;">
+          <label for="inasc">Area of steel at Compression Side(mm<sup>2</sup>):</label></br><input type="number"
+            step="any" id="inasc" value="603.2" min="0" oninput="ocasc1()"
+            aria-label="Area of steel at compression side" required />
+        </div>
+        <div id="ascbc" style="--gc: 2;margin-bottom: 1.1rem;">
+          <div style="display: grid;grid-template-columns: 39% 26% 29%;">
+            <div style="margin-right: 2vh;"><label for="diaasc1">&#934;(mm):<sup class="hid">0</sup></label>
+              <input type="number" step="1" id="diaasc1" value="16" min="0" oninput="calcasc()" required />
+            </div>
+            <div style="margin-right: 2vh;"><label for="nasc1">No:<sup class="hid">0</sup></label>
+              <input type="number" step="1" id="nasc1" value="3" min="0" oninput="calcasc()" required />
+            </div>
+            <div><button class="btn" style="border: 1px solid #f7931e;margin-top: 3.55rem;" type="button"
+                name="myButton" formtarget="_self" id="add" onclick="addc()" />Add Asc</button>
+              <input type="number" step="1" id="sasc1" class="sasc" style="display:none" min="0" readonly>
+            </div>
+          </div>
+        </div>
+        <div><label for="outasc">Total Asc(mm<sup>2</sup>)</label></div>
+        <div style="--gc: 2;"><input type="number" step="any" id="outasc" placeholder=" " readonly /></div>
+      </div>
+      <hr>
+      <div class="PG" style="--gn: 3;">
+        <div></div>
+        <div><button type="submit" class="btn"
+            style="width: 100%;background-color: #f7931e;letter-spacing:.1rem;color: #000;">ANALYSE</button></div>
+        <div></div>
+      </div>
+      <hr>
+      <div class="PG" style="--gn: 3;" id="result">
+        <div style="--gr: 2;"><label>Results after beam analysis</label></div>
+        <div><span id="type1" style="font-size: 1.5rem;">Beam is <span id="type"
+              style="font-weight: 700;"></span></span></div>
+        <div><span id="sta1" style="font-size: 1.5rem;">Solution Type: <span id="sta"
+              style="font-weight: 700;"></span></span></div>
+        <div><label for="mu">Mu(kN.m):</label>
+          <input type="number" id="mu" placeholder=" " readonly />
+        </div>
+        <div><label for="xu">xu(mm):</label>
+          <input type="number" id="xu" placeholder=" " readonly />
+        </div>
+        <div class="resc"><label>Results for compression steel</label></div>
+        <div class="resc" style="--gc: 2;">
+          <div style="display: grid;grid-template-columns: 45% 10% 45%;">
+            <div><label for="fsc">f<sub>sc</sub>(N/mm<sup>2</sup>):</label>
+              <input type="number" id="fsc" placeholder=" " readonly />
+            </div>
+            <div id="at" style=" position: relative;">
+              <p
+                style="font-size: 1.8rem;position: absolute;top: 80%;left: 50%;margin-right: -50%;transform: translate(-50%, -80%);">
+                @
+              <p>
+            </div>
+            <div><label for="e">&#1013;<sub>c</sub>(Strain):<sup class="hid">0</sup></label>
+              <input type="number" id="e" min="0" max="0.00350" placeholder=" " readonly />
+            </div>
+          </div>
+        </div>
+        <div><label>Results for Tension steel</label></div>
+        <div id="rest" style="--gc: 2;">
+          <div style="display: grid;grid-template-columns: 45% 10% 45%;">
+            <div><label for="fsc">f<sub>st</sub>(N/mm<sup>2</sup>):</label>
+              <input type="number" id="fst" placeholder=" " readonly />
+            </div>
+            <div id="atl" style="position: relative;">
+              <p
+                style="font-size: 1.8rem;position: absolute;top: 80%;left: 50%;margin-right: -50%;transform: translate(-50%, -80%);">
+                @
+              <p>
+            </div>
+            <div><label for="e">&#1013;<sub>t</sub>(Strain):<sup class="hid">0</sup></label>
+              <input type="number" id="et" min="0" max="0.00350" placeholder=" " readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+    </form>
+  </div>
+  <script type="text/javascript">
+var _0x1a4d62=_0x374e;(function(_0x5bd6a5,_0x5bdff5){var _0x311204=_0x374e,_0x16da26=_0x5bd6a5();while(!![]){try{var _0x260185=-parseInt(_0x311204(0x1fe))/0x1*(parseInt(_0x311204(0x216))/0x2)+parseInt(_0x311204(0x23a))/0x3+-parseInt(_0x311204(0x20d))/0x4*(parseInt(_0x311204(0x219))/0x5)+-parseInt(_0x311204(0x224))/0x6*(-parseInt(_0x311204(0x23d))/0x7)+parseInt(_0x311204(0x228))/0x8*(parseInt(_0x311204(0x1ff))/0x9)+parseInt(_0x311204(0x213))/0xa+parseInt(_0x311204(0x24a))/0xb*(-parseInt(_0x311204(0x1f6))/0xc);if(_0x260185===_0x5bdff5)break;else _0x16da26['push'](_0x16da26['shift']());}catch(_0x2ced76){_0x16da26['push'](_0x16da26['shift']());}}}(_0x35a9,0xc3242));var _0x4f10ad=(function(){var _0x29fb40=!![];return function(_0x251f13,_0xecf859){var _0x1f5779=_0x29fb40?function(){var _0x5aa959=_0x374e;if(_0xecf859){var _0x4fc206=_0xecf859[_0x5aa959(0x23c)](_0x251f13,arguments);return _0xecf859=null,_0x4fc206;}}:function(){};return _0x29fb40=![],_0x1f5779;};}()),_0x292f61=_0x4f10ad(this,function(){var _0x23a399=_0x374e;return _0x292f61['toString']()[_0x23a399(0x218)]('(((.+)+)+)+$')[_0x23a399(0x217)]()[_0x23a399(0x210)](_0x292f61)[_0x23a399(0x218)](_0x23a399(0x235));});_0x292f61();var _0x3c0773=(function(){var _0x1c09f0=!![];return function(_0x3c8415,_0x1d059d){var _0x187fc0=_0x1c09f0?function(){if(_0x1d059d){var _0x542f94=_0x1d059d['apply'](_0x3c8415,arguments);return _0x1d059d=null,_0x542f94;}}:function(){};return _0x1c09f0=![],_0x187fc0;};}());(function(){_0x3c0773(this,function(){var _0x440620=_0x374e,_0x4411e4=new RegExp(_0x440620(0x248)),_0x4ba21b=new RegExp(_0x440620(0x203),'i'),_0x1ce357=_0x201ef('init');!_0x4411e4[_0x440620(0x1fb)](_0x1ce357+_0x440620(0x214))||!_0x4ba21b[_0x440620(0x1fb)](_0x1ce357+_0x440620(0x1f4))?_0x1ce357('0'):_0x201ef();})();}()),window[_0x1a4d62(0x23f)]=function(){var _0x4fbe14=_0x1a4d62;document[_0x4fbe14(0x240)]('ast1')[_0x4fbe14(0x230)]=!![],ocast1(),document[_0x4fbe14(0x240)](_0x4fbe14(0x249))['checked']=!![],ocasc2();};let ast,n3,asc,nasc,sast,sasc,fck,fy,B,D,ct,cc,de,xulim,fcc,e,fsc,xu1,mu,et,ec,fst,cn;function _0x35a9(){var _0x3c691d=['getElementsByClassName','createElement','value','checked','inast','outasc','debu','length','(((.+)+)+)+$','diaasc','addtbar','ascbc','indexOf','857673rVAyND','firstChild','apply','301GCIPpM','parentNode','onload','getElementById','<div\x20style=\x22display:\x20grid;grid-template-columns:\x2039%\x2026%\x2029%;\x22\x20id=\x22addcbar','\x22\x20\x20value=\x2220\x22\x20min=\x220\x22oninput=\x22calcast2(','\x22>&#934;(mm):</label><input\x20type=\x22number\x22\x20step=\x221\x22\x20id=\x22diaast','innerHTML','start','mastd','call','function\x20*\x5c(\x20*\x5c)','asc2','638781KhlaBp','while\x20(true)\x20{}','Unconverged.','Converged.','counter','none','div','inasc','\x22\x20\x20value=\x223\x22\x20min=\x220\x22oninput=\x22calcast2(','\x22\x20\x20value=\x2216\x22\x20min=\x220\x22oninput=\x22calcasc2(','sast1','diaast1','atl','disapear','outast','addtbar1','sast','\x22>&#934;(mm):</label><input\x20type=\x22number\x22\x20step=\x221\x22\x20id=\x22diaasc',')\x22>Drop\x20Asc</button><input\x20type=\x22number\x22\x20step=\x221\x22\x20id\x20=\x22sasc','mastbc','input',')\x22required></div><div><button\x20class=\x22btn\x22\x20style=\x22border:\x201px\x20solid\x20#f7931e;margin-top:\x203.55rem;\x22\x20type=\x22button\x22\x20name=\x22myButton\x22\x20formtarget=\x22_self\x22\x20onclick=\x22removec(','372sgIrIf','nast1','removeChild','\x22\x20class=\x22sast\x22\x20style=\x22display:none\x22\x20min=\x220\x22\x20readonly></div></div></div>','ascd','test','nearest','action','1ePQFup','1027926BhHLJT','diaasc1','display','nasc1','\x5c+\x5c+\x20*(?:[a-zA-Z_$][0-9a-zA-Z_$]*)','<div\x20style=\x22display:\x20grid;grid-template-columns:\x2039%\x2026%\x2029%;\x22\x20id=\x22addtbar','push','sta','style','animationName','astd','\x22\x20\x20value=\x223\x22\x20min=\x220\x22oninput=\x22calcasc2(','fst','fsc','16228dnetkG','ast1','border','constructor','Processed.','block','8939200BheMsx','chain','gger','241244tlZWGD','toString','search','1195KrIwzM','sasc','Error.','sasc1','string','type','result','removeAttribute','astbc','apear','diaast','174918yZYtUF','4px\x20solid\x20red','appendChild','\x22\x20class=\x22sasc\x22\x20style=\x22display:none\x22\x20min=\x220\x22\x20readonly></div></div>','88KORxdz','target','abs','toFixed',')\x22>Drop\x20Ast</button><input\x20type=\x22number\x22\x20step=\x221\x22\x20id\x20=\x22sast'];_0x35a9=function(){return _0x3c691d;};return _0x35a9();}var astd=document[_0x1a4d62(0x240)](_0x1a4d62(0x209)),mastd=document[_0x1a4d62(0x240)](_0x1a4d62(0x246)),astbc=document['getElementById'](_0x1a4d62(0x221)),mastbc=document[_0x1a4d62(0x240)](_0x1a4d62(0x1f3)),addtbar1=document[_0x1a4d62(0x240)](_0x1a4d62(0x1ef)),index=[];index[_0x1a4d62(0x205)](0x0),index[_0x1a4d62(0x205)](0x1);function getID(){var _0x51c2e0=_0x1a4d62,_0x2365d2=index[_0x51c2e0(0x239)](-0x1);return _0x2365d2!=-0x1?(index[_0x2365d2]=_0x2365d2,_0x2365d2):(_0x2365d2=index[_0x51c2e0(0x234)],index['push'](_0x2365d2),_0x2365d2);}function ocast1(){var _0x2c1f5f=_0x1a4d62;mastbc['replaceWith'](mastd),ast=parseFloat(document[_0x2c1f5f(0x240)](_0x2c1f5f(0x231))[_0x2c1f5f(0x22f)]),gast();}function ocast2(){mastd['replaceWith'](mastbc),calcast(),gast();}function addElement(_0x3686d9){var _0x33cff2=_0x1a4d62;_0x3686d9[_0x33cff2(0x208)]===_0x33cff2(0x222)&&_0x3686d9[_0x33cff2(0x229)][_0x33cff2(0x23e)]['appendChild'](_0x3686d9[_0x33cff2(0x229)]);}function removeElement(_0x3d3937){var _0x2a727a=_0x1a4d62;_0x3d3937[_0x2a727a(0x208)]===_0x2a727a(0x257)&&_0x3d3937[_0x2a727a(0x229)][_0x2a727a(0x23e)][_0x2a727a(0x1f8)](_0x3d3937[_0x2a727a(0x229)]);}function addt(){var _0x133f64=_0x1a4d62,_0x23fec4=document[_0x133f64(0x22e)](_0x133f64(0x250)),_0xfb799a=getID();_0x23fec4[_0x133f64(0x244)]=_0x133f64(0x204)+_0xfb799a+'\x22><div\x20style=\x22margin-right:\x202vh;\x22><label\x20for=\x22diaast'+_0xfb799a+_0x133f64(0x243)+_0xfb799a+_0x133f64(0x242)+_0xfb799a+')\x22\x20required></div><div\x20style=\x22margin-right:\x202vh;\x22><label\x20for=\x22nast1\x22>No:</label><input\x20type=\x22number\x22\x20step=\x221\x22\x20id=\x22nast'+_0xfb799a+_0x133f64(0x252)+_0xfb799a+')\x22required></div><div\x20><button\x20class=\x22btn\x22\x20style=\x22border:\x201px\x20solid\x20#f7931e;margin-top:\x203.55rem;\x22\x20type=\x22button\x22\x20name=\x22myButton\x22\x20formtarget=\x22_self\x22\x20onclick=\x22removet('+_0xfb799a+_0x133f64(0x22c)+_0xfb799a+_0x133f64(0x1f9),document[_0x133f64(0x240)](_0x133f64(0x221))[_0x133f64(0x226)](_0x23fec4['firstChild']),calcast2(_0xfb799a),gast();}function removet(_0x593a08){var _0x261b65=_0x1a4d62,_0x541fb0=document[_0x261b65(0x240)](_0x261b65(0x237)+_0x593a08);document[_0x261b65(0x240)](_0x261b65(0x221))[_0x261b65(0x1f8)](_0x541fb0),tcalc(),gast();}function calcast(){var _0x4dd8be=_0x1a4d62;n1=parseInt(document['getElementById'](_0x4dd8be(0x255))['value']),n2=parseInt(document[_0x4dd8be(0x240)](_0x4dd8be(0x1f7))['value']),sast=n2*(Math['PI']/0x4)*n1*n1,document[_0x4dd8be(0x240)](_0x4dd8be(0x254))['value']=sast[_0x4dd8be(0x22b)](0x3)*0x1,gast();}function calcast2(_0x4f796b){var _0x5408da=_0x1a4d62;n1=parseFloat(document[_0x5408da(0x240)](_0x5408da(0x223)+_0x4f796b)['value']),n2=parseFloat(document[_0x5408da(0x240)]('nast'+_0x4f796b)[_0x5408da(0x22f)]),sast=n2*(Math['PI']/0x4)*n1*n1,document[_0x5408da(0x240)](_0x5408da(0x1f0)+_0x4f796b)[_0x5408da(0x22f)]=sast[_0x5408da(0x22b)](0x3)*0x1,tcalc(),gast();}function tcalc(){var _0x2f524a=_0x1a4d62;sast=0x0;var _0x4c4c4b=document['getElementsByClassName'](_0x2f524a(0x1f0));for(var _0x2fe801=0x0;_0x2fe801<_0x4c4c4b[_0x2f524a(0x234)];++_0x2fe801){{if(!isNaN(parseFloat(_0x4c4c4b[_0x2fe801][_0x2f524a(0x22f)])))sast+=parseFloat(_0x4c4c4b[_0x2fe801][_0x2f524a(0x22f)]);}document['getElementById'](_0x2f524a(0x1ee))[_0x2f524a(0x22f)]=sast[_0x2f524a(0x22b)](0x3)*0x1;}}function gast(){var _0x18b1cf=_0x1a4d62;document[_0x18b1cf(0x240)](_0x18b1cf(0x20e))[_0x18b1cf(0x230)]===!![]?ast=ast:ast=sast,document[_0x18b1cf(0x240)](_0x18b1cf(0x1ee))[_0x18b1cf(0x22f)]=ast['toFixed'](0x3)*0x1,re();}function ocasc1(){var _0x1e0c88=_0x1a4d62;document[_0x1e0c88(0x240)](_0x1e0c88(0x1fa))[_0x1e0c88(0x207)][_0x1e0c88(0x201)]='block',document[_0x1e0c88(0x240)](_0x1e0c88(0x238))[_0x1e0c88(0x207)]['display']=_0x1e0c88(0x24f),asc=parseFloat(document[_0x1e0c88(0x240)](_0x1e0c88(0x251))['value']),gasc();}function _0x374e(_0x2945f1,_0x157937){var _0x150dec=_0x35a9();return _0x374e=function(_0x201ef,_0x3c0773){_0x201ef=_0x201ef-0x1ee;var _0x45f9bc=_0x150dec[_0x201ef];return _0x45f9bc;},_0x374e(_0x2945f1,_0x157937);}function ocasc2(){var _0x2f91bd=_0x1a4d62;document[_0x2f91bd(0x240)](_0x2f91bd(0x1fa))['style'][_0x2f91bd(0x201)]=_0x2f91bd(0x24f),document[_0x2f91bd(0x240)](_0x2f91bd(0x238))['style']['display']=_0x2f91bd(0x212),calcasc(),gasc();}function addc(){var _0x13cf8e=_0x1a4d62,_0xe16f27=document[_0x13cf8e(0x22e)](_0x13cf8e(0x250)),_0x2803dd=getID();_0xe16f27[_0x13cf8e(0x244)]=_0x13cf8e(0x241)+_0x2803dd+'\x22><div\x20style=\x22margin-right:\x202vh;\x22><label\x20for=\x22diaasc'+_0x2803dd+_0x13cf8e(0x1f1)+_0x2803dd+_0x13cf8e(0x253)+_0x2803dd+')\x22\x20required></div><div\x20style=\x22margin-right:\x202vh;\x22><label\x20for=\x22nasc1\x22>No:</label><input\x20type=\x22number\x22\x20step=\x221\x22\x20id=\x22nasc'+_0x2803dd+_0x13cf8e(0x20a)+_0x2803dd+_0x13cf8e(0x1f5)+_0x2803dd+_0x13cf8e(0x1f2)+_0x2803dd+_0x13cf8e(0x227),document[_0x13cf8e(0x240)]('ascbc')[_0x13cf8e(0x226)](_0xe16f27[_0x13cf8e(0x23b)]),calcasc2(_0x2803dd),gasc();}function removec(_0x1de4f9){var _0x5c6b69=_0x1a4d62,_0x389517=document[_0x5c6b69(0x240)]('addcbar'+_0x1de4f9);document[_0x5c6b69(0x240)](_0x5c6b69(0x238))[_0x5c6b69(0x1f8)](_0x389517),ccalc(),gasc();}function calcasc(){var _0x432374=_0x1a4d62;n3=parseInt(document['getElementById'](_0x432374(0x200))['value']),n4=parseInt(document[_0x432374(0x240)](_0x432374(0x202))['value']),sasc=n4*(Math['PI']/0x4)*n3*n3,document[_0x432374(0x240)](_0x432374(0x21c))[_0x432374(0x22f)]=sasc[_0x432374(0x22b)](0x3)*0x1,gasc();}function calcasc2(_0x49422e){var _0xa4bdee=_0x1a4d62;n3=parseFloat(document[_0xa4bdee(0x240)](_0xa4bdee(0x236)+_0x49422e)[_0xa4bdee(0x22f)]),n4=parseFloat(document[_0xa4bdee(0x240)]('nasc'+_0x49422e)[_0xa4bdee(0x22f)]),sasc=n4*(Math['PI']/0x4)*n3*n3,document[_0xa4bdee(0x240)](_0xa4bdee(0x21a)+_0x49422e)[_0xa4bdee(0x22f)]=sasc[_0xa4bdee(0x22b)](0x3)*0x1,ccalc(),gasc();}function ccalc(){var _0x1d9a3e=_0x1a4d62;sasc=0x0;var _0x4fac66=document[_0x1d9a3e(0x22d)](_0x1d9a3e(0x21a));for(var _0x2d189f=0x0;_0x2d189f<_0x4fac66[_0x1d9a3e(0x234)];++_0x2d189f){{if(!isNaN(parseFloat(_0x4fac66[_0x2d189f]['value'])))sasc+=parseFloat(_0x4fac66[_0x2d189f][_0x1d9a3e(0x22f)]);}document['getElementById'](_0x1d9a3e(0x232))[_0x1d9a3e(0x22f)]=sasc[_0x1d9a3e(0x22b)](0x3)*0x1;}gasc();}function gasc(){var _0x360ab9=_0x1a4d62;document[_0x360ab9(0x240)]('asc2')[_0x360ab9(0x230)]==!![]?asc=sasc:asc=asc,document['getElementById'](_0x360ab9(0x232))[_0x360ab9(0x22f)]=asc[_0x360ab9(0x22b)](0x3)*0x1,re();}function finalanalysis(){var _0x3ac62b=_0x1a4d62;document['getElementById'](_0x3ac62b(0x206))[_0x3ac62b(0x244)]=_0x3ac62b(0x211),fck=parseInt(document['getElementById']('fck')[_0x3ac62b(0x22f)]),fy=parseInt(document[_0x3ac62b(0x240)]('fy')[_0x3ac62b(0x22f)]),B=parseFloat(document[_0x3ac62b(0x240)]('B')[_0x3ac62b(0x22f)]),D=parseFloat(document[_0x3ac62b(0x240)]('D')[_0x3ac62b(0x22f)]),ct=parseFloat(document['getElementById']('ct')['value']),cc=parseFloat(document[_0x3ac62b(0x240)]('cc')['value']),ast=parseFloat(document[_0x3ac62b(0x240)]('outast')['value']),asc=parseFloat(document[_0x3ac62b(0x240)](_0x3ac62b(0x232))[_0x3ac62b(0x22f)]);const _0x515636=0x30d40;de=D-ct,xulim=(0.0035/(0.0055+0.87*fy/_0x515636)*de)[_0x3ac62b(0x22b)](0x2)*0x1,fcc=((0.447*fck)[_0x3ac62b(0x22b)](0x2)*0x1)[_0x3ac62b(0x22b)](0x3)*0x1,e=(0.0035*(xulim-cc)/xulim)['toFixed'](0x9)*0x1,fsc=design_stress(fy,e),fst=0.87*fy,xu=((0.87*fy*ast-(fsc-fcc)*asc)/(0.36*fck*B))[_0x3ac62b(0x22b)](0x3)*0x1;if(xu==xulim)mucalc();else{if(xu<xulim)document['getElementById'](_0x3ac62b(0x21e))[_0x3ac62b(0x244)]='Under\x20reinforced.',converge();else xu>xulim&&(document[_0x3ac62b(0x240)](_0x3ac62b(0x21e))['innerHTML']='Over\x20reinforced.',oconverge());}}function design_stress(_0x55cb4e,_0x47bb7e){var _0x467961=_0x1a4d62;if(_0x55cb4e==0xfa)fsc=(0.87*_0x55cb4e)[_0x467961(0x22b)](0x2)*0x1;else{if(_0x55cb4e==0x19f)A=537276.6*_0x47bb7e,b=0x3d419*0x3e8*_0x47bb7e*_0x47bb7e,f=0x545ab9*_0x47bb7e*_0x47bb7e*_0x47bb7e,c=0x2710*f,g=0x47dbed*_0x47bb7e*_0x47bb7e*_0x47bb7e*_0x47bb7e,d=0xf4240*g,fsc=(A-b+c-d-109.1569)['toFixed'](0x2)*0x1;else _0x55cb4e==0x1f4&&(A=0x23f592*_0x47bb7e,b=0x1608ed*0x3e8*_0x47bb7e*_0x47bb7e,f=0x37f3d8*_0x47bb7e*_0x47bb7e*_0x47bb7e,c=0x186a0*f,g=0x32a149*_0x47bb7e*_0x47bb7e*_0x47bb7e*_0x47bb7e,d=0x989680*g,fsc=(1707.624-A+b-c+d)[_0x467961(0x22b)](0x2)*0x1);}return fsc;}function converge(){var _0x3888d0=_0x1a4d62;for(cn=0x0;cn<0x64;cn++){e=(0.0035*(xu-cc)/xu)[_0x3888d0(0x22b)](0x9)*0x1,fsc=design_stress(fy,e),xu1=((0.87*fy*ast-(fsc-fcc)*asc)/(0.36*fck*B))['toFixed'](0x3)*0x1,xu=((xu+xu1)/0x2)[_0x3888d0(0x22b)](0x3)*0x1,et=(0.0035*(de-xu)/xu)[_0x3888d0(0x22b)](0x9)*0x1;if(et<0x0||e<0x0){document[_0x3888d0(0x240)]('sta')[_0x3888d0(0x244)]=_0x3888d0(0x21b);break;}if(fst<0x0||fsc<0x0){document['getElementById']('sta')['innerHTML']='Error.';break;}if(0x0>xu1>de){document[_0x3888d0(0x240)](_0x3888d0(0x206))[_0x3888d0(0x244)]='Error.';break;}if(Math['abs'](xu-xu1)<0.01){mucalc(),document[_0x3888d0(0x240)](_0x3888d0(0x206))[_0x3888d0(0x244)]=_0x3888d0(0x24d);break;}document[_0x3888d0(0x240)]('sta')[_0x3888d0(0x244)]=_0x3888d0(0x24c);}}function mucalc(){var _0x500a12=_0x1a4d62;mu=(0.36*B*fck*xu*(de-0.416*xu)+(fsc-fcc)*asc*(de-cc))/0xf4240,document[_0x500a12(0x240)]('mu')[_0x500a12(0x22f)]=mu['toFixed'](0x2)*0x1,document['getElementById']('xu')['value']=xu[_0x500a12(0x22b)](0x3)*0x1,document[_0x500a12(0x240)](_0x500a12(0x20c))['value']=fsc[_0x500a12(0x22b)](0x2)*0x1;var _0x4c1bb7=document['getElementById']('e');_0x4c1bb7[_0x500a12(0x22f)]=e[_0x500a12(0x22b)](0x5)*0x1;(_0x4c1bb7['value']<0x0||_0x4c1bb7[_0x500a12(0x22f)]>0.0035)&&(_0x4c1bb7[_0x500a12(0x207)][_0x500a12(0x20f)]=_0x500a12(0x225));document[_0x500a12(0x240)](_0x500a12(0x20b))[_0x500a12(0x22f)]=fst[_0x500a12(0x22b)](0x2)*0x1;var _0x535de0=document['getElementById']('et');_0x535de0[_0x500a12(0x22f)]=et[_0x500a12(0x22b)](0x5)*0x1;(_0x535de0[_0x500a12(0x22f)]<0x0||_0x535de0[_0x500a12(0x22f)]>0.0035)&&(_0x535de0[_0x500a12(0x207)]['border']=_0x500a12(0x225));var _0x38fbe=document[_0x500a12(0x22d)]('resc');for(var _0x41c4be=0x0;_0x41c4be<_0x38fbe['length'];++_0x41c4be){asc==0x0?_0x38fbe[_0x41c4be][_0x500a12(0x207)][_0x500a12(0x201)]=_0x500a12(0x24f):_0x38fbe[_0x41c4be][_0x500a12(0x207)]['display']=_0x500a12(0x212);}document[_0x500a12(0x240)](_0x500a12(0x21f))['scrollIntoView']({'behavior':'smooth','block':_0x500a12(0x245),'inline':_0x500a12(0x1fc)});}function format_einput(){}function oconverge(){var _0x20d2ff=_0x1a4d62;document['getElementById']('at')[_0x20d2ff(0x207)][_0x20d2ff(0x201)]=_0x20d2ff(0x212),document[_0x20d2ff(0x240)](_0x20d2ff(0x256))['style']['display']=_0x20d2ff(0x212),document['getElementById']('et')[_0x20d2ff(0x207)][_0x20d2ff(0x201)]=_0x20d2ff(0x212);for(cn=0x0;cn<0x64;cn++){et=(0.0035*(de-xu)/xu)[_0x20d2ff(0x22b)](0x9)*0x1,fst=design_stress(fy,et),ec=(0.0035*(xu-cc)/xu)[_0x20d2ff(0x22b)](0x9)*0x1,fsc=design_stress(fy,ec),xu1=((fst*ast-(fsc-fcc)*asc)/(0.36*fck*B))['toFixed'](0x3)*0x1,xu=((xu+xu1)/0x2)[_0x20d2ff(0x22b)](0x3)*0x1;if(et<0x0||ec<0x0){document[_0x20d2ff(0x240)]('sta')[_0x20d2ff(0x244)]='Error.';break;}if(fst<0x0||fsc<0x0){document[_0x20d2ff(0x240)](_0x20d2ff(0x206))[_0x20d2ff(0x244)]=_0x20d2ff(0x21b);break;}if(0x0>xu1>de){document[_0x20d2ff(0x240)](_0x20d2ff(0x206))[_0x20d2ff(0x244)]=_0x20d2ff(0x21b);break;}if(Math[_0x20d2ff(0x22a)](xu-xu1)<0.01){mucalc(),document['getElementById'](_0x20d2ff(0x206))['innerHTML']='Converged.';break;}document['getElementById'](_0x20d2ff(0x206))[_0x20d2ff(0x244)]=_0x20d2ff(0x24c);}}function re(){var _0x21ee48=_0x1a4d62;document[_0x21ee48(0x240)](_0x21ee48(0x21e))[_0x21ee48(0x244)]='',document[_0x21ee48(0x240)](_0x21ee48(0x206))[_0x21ee48(0x244)]='',document['getElementById']('mu')[_0x21ee48(0x22f)]='',document[_0x21ee48(0x240)]('xu')[_0x21ee48(0x22f)]='',document[_0x21ee48(0x240)](_0x21ee48(0x20c))['value']='',document['getElementById']('e')[_0x21ee48(0x22f)]='',document[_0x21ee48(0x240)]('e')[_0x21ee48(0x220)](_0x21ee48(0x207)),document[_0x21ee48(0x240)](_0x21ee48(0x20b))['value']='',document['getElementById']('et')[_0x21ee48(0x22f)]='',document[_0x21ee48(0x240)]('et')[_0x21ee48(0x220)](_0x21ee48(0x207));}function _0x201ef(_0x172c26){function _0x548b35(_0xaf0172){var _0x2b2694=_0x374e;if(typeof _0xaf0172===_0x2b2694(0x21d))return function(_0x353ce0){}[_0x2b2694(0x210)](_0x2b2694(0x24b))['apply'](_0x2b2694(0x24e));else(''+_0xaf0172/_0xaf0172)[_0x2b2694(0x234)]!==0x1||_0xaf0172%0x14===0x0?function(){return!![];}[_0x2b2694(0x210)](_0x2b2694(0x233)+_0x2b2694(0x215))[_0x2b2694(0x247)](_0x2b2694(0x1fd)):function(){return![];}['constructor'](_0x2b2694(0x233)+_0x2b2694(0x215))['apply']('stateObject');_0x548b35(++_0xaf0172);}try{if(_0x172c26)return _0x548b35;else _0x548b35(0x0);}catch(_0x48d742){}}
+  </script>
+
+</body>
+
+</html>
